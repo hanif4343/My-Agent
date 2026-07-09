@@ -1,11 +1,22 @@
 [
   {
-    "id": "task_001",
-    "title": "Create a Python Calculator",
-    "description": "Create a simple command-line Python calculator that can add, subtract, multiply, and divide numbers.",
-    "instruction": "Write a clean, single-file Python script named calculator.py that handles standard operations like addition, subtraction, multiplication, and division.",
-    "target_file": "calculator.py",
+    "id": "task-001",
+    "title": "Scene model তৈরি",
+    "instruction": "একটা Scene ডেটা মডেল ক্লাস বানাও যাতে id (String), title (String), durationSeconds (int), এবং imagePath (String) ফিল্ড আছে। fromJson/toJson মেথডসহ।",
+    "target_file": "lib/models/scene.dart",
+    "context_files": [],
     "status": "pending",
-    "attempt": 0
+    "attempts": 0,
+    "last_error": null
+  },
+  {
+    "id": "task-002",
+    "title": "Scene repository তৈরি",
+    "instruction": "lib/models/scene.dart থেকে Scene ইমপোর্ট করে একটা SceneRepository ক্লাস বানাও যেখানে addScene, getScenes, deleteScene মেথড আছে (in-memory list দিয়ে শুরু করো)।",
+    "target_file": "lib/repositories/scene_repository.dart",
+    "context_files": ["lib/models/scene.dart"],
+    "status": "pending",
+    "attempts": 0,
+    "last_error": null
   }
 ]
