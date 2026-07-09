@@ -3,6 +3,7 @@
     "id": "task_001",
     "title": "Create a Python Calculator",
     "description": "Create a simple command-line Python calculator that can add, subtract, multiply, and divide numbers.",
-    "target_file": "calculator.py"
+    "target_file": "calculator.py",
+    "status": "pending"
   }
 ]
