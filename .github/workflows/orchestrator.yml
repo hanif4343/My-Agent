@@ -1,0 +1,46 @@
+name: AI Dev Orchestrator
+
+on:
+  workflow_dispatch:      # ম্যানুয়ালি রান করার বাটন
+  schedule:
+    - cron: "0 * * * *"   # প্রতি ঘণ্টায় একবার (চাইলে বদলাও/বাদ দাও)
+
+jobs:
+  run-orchestrator:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0"
+
+      - name: Configure git identity
+        run: |
+          git config --global user.name "ai-orchestrator-bot"
+          git config --global user.email "bot@users.noreply.github.com"
+
+      - name: Run orchestrator
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          python -m orchestrator.main \
+            --project ./app \
+            --tasks ./tasks.json \
+            --rules ./PROJECT_RULES.md \
+            --max-tasks 5
