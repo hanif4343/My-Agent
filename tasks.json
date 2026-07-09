@@ -3,8 +3,9 @@
     "id": "task_001",
     "title": "Create a Python Calculator",
     "description": "Create a simple command-line Python calculator that can add, subtract, multiply, and divide numbers.",
+    "instruction": "Write a clean, single-file Python script named calculator.py that handles standard operations like addition, subtraction, multiplication, and division.",
     "target_file": "calculator.py",
-    "status": "pending"
+    "status": "pending",
+    "attempt": 0
   }
 ]
- 
