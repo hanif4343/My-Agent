@@ -43,6 +43,17 @@ def build_system_prompt(rules_path: str) -> str:
 
 def build_task_prompt(task: dict, project_dir: str) -> str:
     context_snippets = []
+
+    # টার্গেট ফাইল আগে থেকেই থাকলে (যেমন pubspec.yaml প্রজেক্ট স্ক্যাফোল্ড করার পর),
+    # সেটার বর্তমান কনটেন্ট সবসময় prompt-এ দেখানো হয় — নাহলে AI অন্ধভাবে পুরো ফাইল
+    # নতুন করে হ্যালুসিনেট করে ফেলবে, বিদ্যমান কনটেন্ট এডিট করার বদলে।
+    target_path = Path(project_dir) / task["target_file"]
+    if target_path.exists():
+        context_snippets.append(
+            f"--- বর্তমান {task['target_file']} (এটাই এডিট/আপডেট করবে, সম্পূর্ণ নতুন করে লিখবে না) ---\n"
+            f"{target_path.read_text(encoding='utf-8')}"
+        )
+
     for cf in task.get("context_files", []):
         p = Path(project_dir) / cf
         if p.exists():
