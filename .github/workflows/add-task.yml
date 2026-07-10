@@ -1,0 +1,62 @@
+name: Add Orchestrator Task
+
+# Actions ট্যাব থেকে "Run workflow" চাপলে এই ইনপুট ফর্মটা দেখাবে —
+# টাইপ করে সাবমিট দিলেই tasks.json এবং orchestrator.config.json আপডেট হয়ে যাবে।
+on:
+  workflow_dispatch:
+    inputs:
+      project_type:
+        description: "প্রজেক্টের ধরন"
+        required: true
+        type: choice
+        options:
+          - flutter
+          - python
+          - kotlin
+          - node
+          - generic
+      title:
+        description: "টাস্কের সংক্ষিপ্ত টাইটেল"
+        required: true
+        type: string
+      instruction:
+        description: "কী বানাতে হবে তার বিস্তারিত নির্দেশনা"
+        required: true
+        type: string
+      target_file:
+        description: "কোন ফাইলে লেখা হবে (app/ ফোল্ডারের ভেতরের relative path, যেমন calculator.py বা lib/models/scene.dart)"
+        required: true
+        type: string
+
+jobs:
+  add-task:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Configure git identity
+        run: |
+          git config --global user.name "ai-orchestrator-bot"
+          git config --global user.email "bot@users.noreply.github.com"
+
+      - name: টাস্ক ও config যোগ করা
+        run: |
+          python orchestrator/manage_tasks.py \
+            --project-type "${{ inputs.project_type }}" \
+            --title "${{ inputs.title }}" \
+            --instruction "${{ inputs.instruction }}" \
+            --target-file "${{ inputs.target_file }}" \
+            --project-dir "app" \
+            --tasks-file "tasks.json"
+
+      - name: Commit ও push
+        run: |
+          git add tasks.json app/orchestrator.config.json
+          git commit -m "Add task: ${{ inputs.title }} (${{ inputs.project_type }})" || echo "কোনো পরিবর্তন নেই"
+          git push
