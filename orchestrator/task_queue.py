@@ -54,6 +54,7 @@ class TaskQueue:
             t.setdefault("status", "pending")
             t.setdefault("attempts", 0)
             t.setdefault("last_error", None)
+            t.setdefault("provider", None)
 
     def _save(self):
         self.path.write_text(
@@ -66,12 +67,14 @@ class TaskQueue:
                 return t
         return None
 
-    def mark(self, task_id: str, status: str, error: str = None):
+    def mark(self, task_id: str, status: str, error: str = None, provider: str = None):
         for t in self.tasks:
             if t["id"] == task_id:
                 t["status"] = status
                 if error is not None:
                     t["last_error"] = error
+                if provider is not None:
+                    t["provider"] = provider
                 self._save()
                 return
         raise KeyError(f"টাস্ক পাওয়া যায়নি: {task_id}")
