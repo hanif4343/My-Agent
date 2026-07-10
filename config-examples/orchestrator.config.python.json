@@ -1,0 +1,7 @@
+{
+  "language": "python",
+  "validate_commands": [
+    "python -m py_compile calculator.py",
+    "python -m pytest"
+  ]
+}
