@@ -1,0 +1,6 @@
+{
+  "language": "kotlin",
+  "validate_commands": [
+    "./gradlew build --no-daemon"
+  ]
+}
