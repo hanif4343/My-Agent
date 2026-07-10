@@ -26,6 +26,7 @@ def process_task(router: ProviderRouter, queue: TaskQueue, task: dict, project_d
     system_prompt = prompts.build_system_prompt(rules_path)
     user_prompt = prompts.build_task_prompt(task, project_dir)
     error_feedback = None
+    last_provider = None
 
     for attempt in range(1, config.MAX_RETRY_PER_TASK + 1):
         queue.increment_attempt(task["id"])
@@ -47,6 +48,7 @@ def process_task(router: ProviderRouter, queue: TaskQueue, task: dict, project_d
         target_path.parent.mkdir(parents=True, exist_ok=True)
         target_path.write_text(code, encoding="utf-8")
         print(f"  📝 লেখা হলো: {task['target_file']} (provider: {result['provider']})")
+        last_provider = result["provider"]
 
         check = validator.validate_all(project_dir)
         if check["ok"]:
@@ -54,18 +56,18 @@ def process_task(router: ProviderRouter, queue: TaskQueue, task: dict, project_d
             commit_msg = f"AI: {task['title']} ({result['provider']})"
             git_result = git_ops.commit_and_push(project_dir, commit_msg)
             if git_result["ok"]:
-                queue.mark(task["id"], "done")
+                queue.mark(task["id"], "done", provider=result["provider"])
                 print("  ✔ কমিট ও পুশ সম্পন্ন")
                 return True
             else:
-                queue.mark(task["id"], "failed", error=git_result["output"])
+                queue.mark(task["id"], "failed", error=git_result["output"], provider=last_provider)
                 print(f"  ✖ git push ব্যর্থ:\n{git_result['output']}")
                 return False
         else:
             print(f"  ⚠ validation fail ({check['stage']}), AI-কে ফিক্স করতে বলা হচ্ছে")
             error_feedback = check["output"][:4000]  # খুব বড় error prompt-এ পাঠানো এড়াতে
 
-    queue.mark(task["id"], "failed", error=error_feedback or "max retry শেষ")
+    queue.mark(task["id"], "failed", error=error_feedback or "max retry শেষ", provider=last_provider)
     print(f"  ✖ {config.MAX_RETRY_PER_TASK} বার চেষ্টার পরও ব্যর্থ")
     return False
 
