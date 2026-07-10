@@ -15,7 +15,7 @@
     "instruction": "একটা Scene ডেটা মডেল ক্লাস বানাও যাতে id (String), title (String), durationSeconds (int), এবং imagePath (String) ফিল্ড আছে। fromJson/toJson মেথডসহ।",
     "target_file": "lib/models/scene.dart",
     "context_files": [],
-    "status": "in_progress",
+    "status": "done",
     "attempts": 1,
     "last_error": null
   },
@@ -25,8 +25,8 @@
     "instruction": "add/subtract/multiply/divide ফাংশনসহ calculator.py বানাও",
     "target_file": "calculator.py",
     "context_files": [],
-    "status": "pending",
-    "attempts": 0,
+    "status": "in_progress",
+    "attempts": 1,
     "last_error": null
   }
 ]
