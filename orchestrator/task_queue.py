@@ -21,6 +21,12 @@ tasks.json গঠন:
 import json
 from pathlib import Path
 
+REQUIRED_FIELDS = ["id", "title", "instruction", "target_file"]
+
+
+class TaskValidationError(Exception):
+    pass
+
 
 class TaskQueue:
     def __init__(self, path: str):
@@ -28,9 +34,26 @@ class TaskQueue:
         if not self.path.exists():
             raise FileNotFoundError(f"Task file পাওয়া যায়নি: {path}")
         self._load()
+        self._validate()
 
     def _load(self):
         self.tasks = json.loads(self.path.read_text(encoding="utf-8"))
+
+    def _validate(self):
+        """প্রতিটা টাস্কে দরকারি ফিল্ড আছে কিনা লোড করার সময়েই চেক করে,
+        যাতে লুপের মাঝপথে অস্পষ্ট KeyError-এ ক্র্যাশ না করে।"""
+        for i, t in enumerate(self.tasks):
+            missing = [f for f in REQUIRED_FIELDS if f not in t or t[f] in (None, "")]
+            if missing:
+                raise TaskValidationError(
+                    f"tasks.json এর {i}-নম্বর টাস্কে (id={t.get('id', '?')}) এই ফিল্ডগুলো "
+                    f"অনুপস্থিত বা খালি: {missing}। প্রতিটা টাস্কে অবশ্যই "
+                    f"id, title, instruction, target_file থাকতে হবে।"
+                )
+            t.setdefault("context_files", [])
+            t.setdefault("status", "pending")
+            t.setdefault("attempts", 0)
+            t.setdefault("last_error", None)
 
     def _save(self):
         self.path.write_text(
