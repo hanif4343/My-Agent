@@ -1,8 +1,25 @@
 # AI Dev Orchestrator (MVP)
 
-কোনো একক AI বা প্ল্যাটফর্মের উপর নির্ভরশীল না — Gemini, Groq, Cerebras, OpenRouter-এর ফ্রি টিয়ার ঘুরিয়ে ঘুরিয়ে ব্যবহার করে কোড জেনারেট, validate, auto-fix, commit ও push করে।
+কোনো একক AI বা প্ল্যাটফর্মের উপর নির্ভরশীল না — Gemini, Groq, Cerebras, OpenRouter-এর ফ্রি টিয়ার ঘুরিয়ে ঘুরিয়ে ব্যবহার করে কোড জেনারেট, validate, auto-fix, commit ও push করে। **Flutter, Python, Kotlin, Node — যেকোনো ভাষার প্রজেক্টে কাজ করে**, কোনো ভাষা hardcode করা নেই।
+
+## নতুন টাস্ক যোগ করার সবচেয়ে সহজ উপায় (মোবাইল থেকেই)
+
+টার্মিনাল বা কোনো টোকেন ছাড়াই, শুধু GitHub-এর Actions ট্যাব থেকে ফর্ম পূরণ করে:
+
+1. রিপোতে `Actions` ট্যাবে যাও
+2. বাম পাশে `Add Orchestrator Task` workflow বেছে নাও
+3. `Run workflow` বাটনে চাপ দাও — একটা ফর্ম আসবে:
+   - **project_type**: `flutter` / `python` / `kotlin` / `node` / `generic` (dropdown)
+   - **title**: সংক্ষিপ্ত নাম
+   - **instruction**: কী বানাতে হবে তার বিস্তারিত
+   - **target_file**: কোন ফাইলে লেখা হবে (যেমন `calculator.py` বা `lib/models/scene.dart`)
+4. Submit করলেই এটা নিজে থেকে `tasks.json`-এ টাস্ক যোগ করবে এবং `app/orchestrator.config.json` সেই ভাষার জন্য সঠিক validate commands দিয়ে বসিয়ে দেবে
+5. এরপর `AI Dev Orchestrator` workflow (ম্যানুয়ালি বা cron অনুযায়ী) চালালেই সেই টাস্ক প্রসেস হবে
+
+**একটা গুরুত্বপূর্ণ ব্যাপার:** `orchestrator.config.json` পুরো প্রজেক্টের জন্য একটাই — মানে একটা repo একবারে এক ধরনের প্রজেক্ট (হয় Flutter, হয় Python) চালানোর জন্য ডিজাইন করা। ভিন্ন ভিন্ন ভাষার সম্পূর্ণ আলাদা প্রজেক্টের জন্য আলাদা GitHub repo ব্যবহার করাই ভালো।
 
 ## কীভাবে কাজ করে
+
 
 ```
 tasks.json (pending টাস্ক)
@@ -35,6 +52,19 @@ python -m orchestrator.main \
 ```
 
 `tasks.example.json` কপি করে `tasks.json` বানাও এবং নিজের টাস্ক লেখো।
+
+## Validation যেভাবে কাজ করে (ভাষা-agnostic)
+
+`validator.py` কোনো ভাষা hardcode করে না। প্রজেক্টের `orchestrator.config.json` ফাইলে যেসব কমান্ড দেওয়া থাকবে, ঠিক সেগুলোই ক্রমান্বয়ে চালাবে:
+
+```json
+{
+  "language": "python",
+  "validate_commands": ["python -m py_compile calculator.py", "python -m pytest"]
+}
+```
+
+`config-examples/` ফোল্ডারে flutter, python, kotlin, node — প্রতিটার জন্য উদাহরণ config দেওয়া আছে। `manage_tasks.py` টুলটা এগুলোই স্বয়ংক্রিয়ভাবে বসিয়ে দেয়, তাই সাধারণত হাতে লিখতে হবে না।
 
 ## GitHub Actions দিয়ে অটোমেট করা
 
