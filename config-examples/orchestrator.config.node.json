@@ -1,0 +1,7 @@
+{
+  "language": "node",
+  "validate_commands": [
+    "npm install",
+    "npm test"
+  ]
+}
