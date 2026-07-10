@@ -22,8 +22,6 @@ jobs:
       - name: Install orchestrator dependencies
         run: pip install -r requirements.txt
 
-      # প্রজেক্ট রুটে থাকা orchestrator.config.json থেকে ভাষা পড়া হয়।
-      # ফাইল না থাকলে বা ফিল্ড না থাকলে "generic" ধরে নেওয়া হয় (কোনো এক্সট্রা setup ছাড়াই)
       - name: Detect project language
         id: detect
         run: |
@@ -41,6 +39,17 @@ jobs:
         with:
           flutter-version: "3.24.0"
 
+      - name: Flutter প্রজেক্ট স্ক্যাফোল্ড করা (প্রথমবার, pubspec.yaml না থাকলে)
+        if: steps.detect.outputs.language == 'flutter'
+        run: |
+          if [ ! -f "app/pubspec.yaml" ]; then
+            echo "pubspec.yaml পাওয়া যায়নি — নতুন Flutter প্রজেক্ট স্ক্যাফোল্ড করা হচ্ছে..."
+            flutter create --org com.hanifsantona --project-name our_story app
+            echo "স্ক্যাফোল্ড সম্পন্ন।"
+          else
+            echo "pubspec.yaml আগে থেকেই আছে, স্কিপ করা হলো।"
+          fi
+
       - name: Setup Java (Kotlin/Gradle প্রজেক্টের জন্য)
         if: steps.detect.outputs.language == 'kotlin'
         uses: actions/setup-java@v4
@@ -53,8 +62,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      # python হলে উপরের actions/setup-python@v5 ধাপই যথেষ্ট, আলাদা কিছু লাগে না
 
       - name: Configure git identity
         run: |
@@ -73,3 +80,41 @@ jobs:
             --tasks ./tasks.json \
             --rules ./PROJECT_RULES.md \
             --max-tasks 5
+
+      # কোনো টাস্ক max retry শেষেও fail থাকলে সেগুলোর তালিকা বের করা।
+      # MAIL_USERNAME/MAIL_PASSWORD/MAIL_TO secret সেট না থাকলে এই ধাপ নিজে থেকে স্কিপ হবে।
+      - name: Check for unresolved failed tasks
+        id: check_failed
+        run: |
+          python3 -c "
+          import json
+          tasks = json.load(open('tasks.json'))
+          failed = [t for t in tasks if t.get('status') == 'failed']
+          if failed:
+              lines = [f\"- {t['id']}: {t['title']} (provider: {t.get('provider','?')})\" for t in failed]
+              body = 'নিচের টাস্কগুলো AI নিজে থেকে ঠিক করতে পারেনি, ম্যানুয়াল চেক দরকার:' + chr(10) + chr(10).join(lines)
+              print('has_failed=true')
+              with open('failed_summary.txt', 'w') as f:
+                  f.write(body)
+          else:
+              print('has_failed=false')
+          " | tee /tmp/check_output.txt
+          if grep -q "has_failed=true" /tmp/check_output.txt; then
+            echo "has_failed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_failed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Send email alert (manual fix প্রয়োজন হলে)
+        if: steps.check_failed.outputs.has_failed == 'true'
+        uses: dawidd6/action-send-mail@v3
+        continue-on-error: true
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "⚠️ AI Orchestrator: ম্যানুয়াল ফিক্স দরকার (${{ github.repository }})"
+          to: ${{ secrets.MAIL_TO }}
+          from: AI Dev Orchestrator
+          body: file://failed_summary.txt
