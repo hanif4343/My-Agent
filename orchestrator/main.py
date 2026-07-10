@@ -15,7 +15,7 @@ from pathlib import Path
 
 from . import config
 from .providers import ProviderRouter, AllProvidersFailedError
-from .task_queue import TaskQueue
+from .task_queue import TaskQueue, TaskValidationError
 from . import validator, git_ops, prompts
 
 
@@ -81,7 +81,12 @@ def main():
     router = ProviderRouter()
     print(f"সক্রিয় provider: {[p['name'] for p in router.providers]}")
 
-    queue = TaskQueue(args.tasks)
+    try:
+        queue = TaskQueue(args.tasks)
+    except TaskValidationError as e:
+        print(f"\n✖ tasks.json ভুল আছে, থামছি:\n{e}\n")
+        sys.exit(1)
+
     print("শুরুর অবস্থা:", queue.summary())
 
     processed = 0
