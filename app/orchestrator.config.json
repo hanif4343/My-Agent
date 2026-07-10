@@ -1,6 +1,7 @@
 {
-  "language": "python",
+  "language": "flutter",
   "validate_commands": [
-    "python -m py_compile calculator.py"
+    "flutter analyze",
+    "flutter test"
   ]
 }
