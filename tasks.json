@@ -1,32 +1,96 @@
 [
   {
     "id": "task_001",
-    "title": "Create a Python Calculator",
-    "instruction": "একটা calculator.py ফাইল বানাও যাতে add, subtract, multiply, divide এই ৪টা ফাংশন থাকবে। প্রতিটা ফাংশন দুইটা float নেবে এবং ফলাফল রিটার্ন করবে। divide-এ zero division হলে ValueError রেইজ করবে।",
-    "target_file": "calculator.py",
+    "title": "pubspec.yaml dependencies যোগ করা",
+    "instruction": "pubspec.yaml ফাইলে dependencies সেকশনে এই প্যাকেজগুলো যোগ করো (যুক্তিসঙ্গত stable ভার্সন কনস্ট্রেইন্ট সহ): hive, hive_flutter, path_provider, video_player, audioplayers, record, permission_handler, image_picker, file_picker, provider, uuid, google_fonts, lottie। flutter, cupertino_icons ইত্যাদি যা আগে থেকে আছে সেগুলো অপরিবর্তিত রাখো। flutter/assets সেকশনে assets/animations/ এবং assets/images/ পাথ যোগ করো।",
+    "target_file": "pubspec.yaml",
     "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null
+    "status": "pending",
+    "attempts": 0,
+    "last_error": null,
+    "provider": null
   },
   {
     "id": "task_002",
-    "title": "Scene model তৈরি (Flutter উদাহরণ)",
-    "instruction": "একটা Scene ডেটা মডেল ক্লাস বানাও যাতে id (String), title (String), durationSeconds (int), এবং imagePath (String) ফিল্ড আছে। fromJson/toJson মেথডসহ।",
-    "target_file": "lib/models/scene.dart",
+    "title": "Core enums তৈরি",
+    "instruction": "lib/core/constants/app_enums.dart ফাইলে ৪টা enum বানাও: AppTheme (darkRomantic, goldenWedding, moonNight, roseGarden, pinkLove, sunset, galaxy, hospital, nursery, home), ChapterId (chapter1 থেকে chapter17, প্রতিটার সাথে একটা human-readable বাংলা title ম্যাপ করা getter), AnimationType (heartRain, roseRain, butterfly, sparkle, goldenDust, fireworks, cloud, rain, moon, stars, letter, envelope, ring, book, pageTurn, typewriter, lensFlare, lightRays, confetti, magicGlow), TransitionType (fade, zoom, slide, rotate, flip, blur, film, inkReveal, pageCurl, cameraFlash, glass, ripple)।",
+    "target_file": "lib/core/constants/app_enums.dart",
     "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null
+    "status": "pending",
+    "attempts": 0,
+    "last_error": null,
+    "provider": null
   },
   {
     "id": "task_003",
-    "title": "Create a caluculator",
-    "instruction": "add/subtract/multiply/divide ফাংশনসহ calculator.py বানাও",
-    "target_file": "calculator.py",
+    "title": "SceneModel তৈরি (হাতে-লেখা Hive adapter সহ)",
+    "instruction": "lib/features/story/data/models/scene_model.dart ফাইলে SceneModel ক্লাস বানাও extends HiveObject। ফিল্ড: id (String), year (int), chapter (String), date (String), title (String), subtitle (String), storyText (String), photoPaths (List<String>), videoPaths (List<String>), voiceNotePaths (List<String>), musicPath (String?), theme (String), animationType (String), transitionType (String), durationSeconds (int), isFavorite (bool), tags (List<String>)। কনস্ট্রাক্টর সব ফিল্ড required (musicPath ছাড়া) নেবে। এর নিচেই একটা SceneModelAdapter ক্লাস লেখো যা TypeAdapter<SceneModel> extend করে, typeId = 0, read()/write() মেথড হাতে implement করবে (build_runner ব্যবহার করবে না, pure manual code)।",
+    "target_file": "lib/features/story/data/models/scene_model.dart",
     "context_files": [],
-    "status": "in_progress",
-    "attempts": 1,
-    "last_error": null
+    "status": "pending",
+    "attempts": 0,
+    "last_error": null,
+    "provider": null
+  },
+  {
+    "id": "task_004",
+    "title": "HiveSceneRepository তৈরি",
+    "instruction": "lib/features/story/data/repositories/hive_scene_repository.dart ফাইলে HiveSceneRepository ক্লাস বানাও যা একটা Hive Box<SceneModel> নিয়ে কাজ করবে (constructor এ Box<SceneModel> box নেবে)। মেথড: addScene, updateScene, deleteScene(id), getAllScenes() (year অনুযায়ী sorted রিটার্ন করবে), getSceneById(id), reorderScenes(List<String> orderedIds), toggleFavorite(id)।",
+    "target_file": "lib/features/story/data/repositories/hive_scene_repository.dart",
+    "context_files": ["lib/features/story/data/models/scene_model.dart"],
+    "status": "pending",
+    "attempts": 0,
+    "last_error": null,
+    "provider": null
+  },
+  {
+    "id": "task_005",
+    "title": "main.dart - Hive init ও app entry",
+    "instruction": "lib/main.dart লেখো: main() এ WidgetsFlutterBinding.ensureInitialized(), Hive.initFlutter(), Hive.registerAdapter(SceneModelAdapter()), Hive.openBox<SceneModel>('scenes') করবে। MaterialApp চালু করবে dark theme দিয়ে (Material 3), হোম হবে একটা ModeSelectionScreen (এখনো বানানো হয়নি, স্টাব হিসেবে একটা সাধারণ Scaffold লেখো '2টা বাটন: Story Mode / Creator Mode' — পরের টাস্কে এটা replace হবে)।",
+    "target_file": "lib/main.dart",
+    "context_files": ["lib/features/story/data/models/scene_model.dart"],
+    "status": "pending",
+    "attempts": 0,
+    "last_error": null,
+    "provider": null
+  },
+  {
+    "id": "task_006",
+    "title": "Creator Mode password gate",
+    "instruction": "lib/features/story/presentation/creator_mode/password_gate_screen.dart ফাইলে PasswordGateScreen (StatefulWidget) বানাও। একটা password input field, submit বাটন। crypto প্যাকেজ ছাড়াই dart:convert এর utf8 আর dart:core দিয়ে সহজ hash compare করো (SHA256 এর জন্য শুধু dart এর মধ্যে থাকা ফাংশন ব্যবহার করো, নতুন প্যাকেজ যোগ করবে না — না পারলে সরল স্ট্রিং তুলনা করো placeholder হিসেবে, TODO কমেন্ট রেখে)। সঠিক হলে CreatorDashboardScreen এ navigate করবে (route named '/creator-dashboard'), ভুল হলে snackbar এ 'ভুল পাসওয়ার্ড' দেখাবে।",
+    "target_file": "lib/features/story/presentation/creator_mode/password_gate_screen.dart",
+    "context_files": [],
+    "status": "pending",
+    "attempts": 0,
+    "last_error": null,
+    "provider": null
+  },
+  {
+    "id": "task_007",
+    "title": "Story Mode স্ক্রিন (read-only skeleton)",
+    "instruction": "lib/features/story/presentation/story_mode/story_mode_screen.dart ফাইলে StoryModeScreen (StatelessWidget বা Consumer) বানাও যা HiveSceneRepository থেকে getAllScenes() কল করে scene গুলো একটা vertical PageView এ দেখাবে — প্রতিটা scene এ title, subtitle, storyText, year দেখাবে (এখনো animation/music/photo রেন্ডার করবে না, শুধু টেক্সট লেআউট, dark romantic theme অনুযায়ী রঙ ব্যবহার করবে)। কোনো edit বাটন থাকবে না — সম্পূর্ণ read-only।",
+    "target_file": "lib/features/story/presentation/story_mode/story_mode_screen.dart",
+    "context_files": [
+      "lib/features/story/data/models/scene_model.dart",
+      "lib/features/story/data/repositories/hive_scene_repository.dart"
+    ],
+    "status": "pending",
+    "attempts": 0,
+    "last_error": null,
+    "provider": null
+  },
+  {
+    "id": "task_008",
+    "title": "Creator Mode dashboard স্ক্রিন",
+    "instruction": "lib/features/story/presentation/creator_mode/creator_dashboard_screen.dart ফাইলে CreatorDashboardScreen বানাও: HiveSceneRepository থেকে getAllScenes() লিস্ট আকারে দেখাবে (ListView, প্রতিটা item এ title, year, chapter, favorite icon, delete বাটন, edit বাটন — edit/delete শুধু callback stub রাখবে, আসল editor পরের ধাপে হবে)। উপরে একটা FloatingActionButton থাকবে '+ নতুন Scene' এর জন্য (এখন শুধু placeholder onPressed, এখনো editor বানানো হয়নি)।",
+    "target_file": "lib/features/story/presentation/creator_mode/creator_dashboard_screen.dart",
+    "context_files": [
+      "lib/features/story/data/models/scene_model.dart",
+      "lib/features/story/data/repositories/hive_scene_repository.dart"
+    ],
+    "status": "pending",
+    "attempts": 0,
+    "last_error": null,
+    "provider": null
   }
 ]
