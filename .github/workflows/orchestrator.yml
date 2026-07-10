@@ -1,9 +1,9 @@
 name: AI Dev Orchestrator
 
 on:
-  workflow_dispatch:      # ম্যানুয়ালি রান করার বাটন
+  workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"   # প্রতি ঘণ্টায় একবার (চাইলে বদলাও/বাদ দাও)
+    - cron: "0 * * * *"
 
 jobs:
   run-orchestrator:
@@ -19,13 +19,42 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install orchestrator dependencies
         run: pip install -r requirements.txt
 
+      # প্রজেক্ট রুটে থাকা orchestrator.config.json থেকে ভাষা পড়া হয়।
+      # ফাইল না থাকলে বা ফিল্ড না থাকলে "generic" ধরে নেওয়া হয় (কোনো এক্সট্রা setup ছাড়াই)
+      - name: Detect project language
+        id: detect
+        run: |
+          if [ -f "app/orchestrator.config.json" ]; then
+            LANG=$(python3 -c "import json;print(json.load(open('app/orchestrator.config.json')).get('language','generic'))")
+          else
+            LANG="generic"
+          fi
+          echo "language=$LANG" >> "$GITHUB_OUTPUT"
+          echo "প্রজেক্টের ভাষা শনাক্ত হলো: $LANG"
+
       - name: Setup Flutter
+        if: steps.detect.outputs.language == 'flutter'
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.24.0"
+
+      - name: Setup Java (Kotlin/Gradle প্রজেক্টের জন্য)
+        if: steps.detect.outputs.language == 'kotlin'
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Setup Node.js
+        if: steps.detect.outputs.language == 'node'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # python হলে উপরের actions/setup-python@v5 ধাপই যথেষ্ট, আলাদা কিছু লাগে না
 
       - name: Configure git identity
         run: |
