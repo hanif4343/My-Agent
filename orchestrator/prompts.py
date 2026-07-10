@@ -52,7 +52,7 @@ def build_task_prompt(task: dict, project_dir: str) -> str:
 
     return (
         f"টাস্ক: {task['title']}\n\n"
-        f"নির্দেশনা: {instruction = task.get("instructions") or task.get("instruction", "")}\n\n"
+        f"নির্দেশনা: {task['instruction']}\n\n"
         f"টার্গেট ফাইল: {task['target_file']}\n\n"
         f"প্রাসঙ্গিক ফাইলসমূহ:\n{context_block}"
     )
