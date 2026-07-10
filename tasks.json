@@ -18,5 +18,15 @@
     "status": "pending",
     "attempts": 0,
     "last_error": null
+  },
+  {
+    "id": "task_003",
+    "title": "Create a caluculator",
+    "instruction": "add/subtract/multiply/divide ফাংশনসহ calculator.py বানাও",
+    "target_file": "calculator.py",
+    "context_files": [],
+    "status": "pending",
+    "attempts": 0,
+    "last_error": null
   }
 ]
