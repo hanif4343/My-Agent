@@ -66,6 +66,20 @@ python -m orchestrator.main \
 
 `config-examples/` ফোল্ডারে flutter, python, kotlin, node — প্রতিটার জন্য উদাহরণ config দেওয়া আছে। `manage_tasks.py` টুলটা এগুলোই স্বয়ংক্রিয়ভাবে বসিয়ে দেয়, তাই সাধারণত হাতে লিখতে হবে না।
 
+## Manual-fix Email Alert (ঐচ্ছিক)
+
+কোনো টাস্ক max retry শেষেও fail থাকলে ইমেইল যাবে। কাজ করাতে ৩টা Secret যোগ করো:
+
+- `MAIL_USERNAME` — Gmail ঠিকানা
+- `MAIL_PASSWORD` — Gmail App Password (সাধারণ পাসওয়ার্ড না; Google Account → Security → App Passwords থেকে বানাতে হবে)
+- `MAIL_TO` — যেই ইমেইলে alert পাঠাতে চাও
+
+এই secret গুলো না দিলে email step নিজে থেকেই স্কিপ হয়ে যাবে, error দেবে না।
+
+## Provider Tracking
+
+প্রতিটা টাস্ক সম্পন্ন/ব্যর্থ হওয়ার পর `tasks.json`-এ `"provider"` ফিল্ডে কোন AI (gemini/groq/cerebras/openrouter) সেটা করেছে তা সেভ হয়ে যায় — মনিটরিং app এখান থেকেই দেখাতে পারবে।
+
 ## GitHub Actions দিয়ে অটোমেট করা
 
 1. এই পুরো repo GitHub-এ push করো
