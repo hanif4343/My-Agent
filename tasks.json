@@ -5,7 +5,7 @@
     "instruction": "একটা calculator.py ফাইল বানাও যাতে add, subtract, multiply, divide এই ৪টা ফাংশন থাকবে। প্রতিটা ফাংশন দুইটা float নেবে এবং ফলাফল রিটার্ন করবে। divide-এ zero division হলে ValueError রেইজ করবে।",
     "target_file": "calculator.py",
     "context_files": [],
-    "status": "in_progress",
+    "status": "done",
     "attempts": 1,
     "last_error": null
   },
@@ -15,8 +15,8 @@
     "instruction": "একটা Scene ডেটা মডেল ক্লাস বানাও যাতে id (String), title (String), durationSeconds (int), এবং imagePath (String) ফিল্ড আছে। fromJson/toJson মেথডসহ।",
     "target_file": "lib/models/scene.dart",
     "context_files": [],
-    "status": "pending",
-    "attempts": 0,
+    "status": "in_progress",
+    "attempts": 1,
     "last_error": null
   },
   {
