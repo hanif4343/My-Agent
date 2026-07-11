@@ -92,9 +92,9 @@
       "lib/features/story/data/models/scene_model.dart",
       "lib/features/story/data/repositories/hive_scene_repository.dart"
     ],
-    "status": "failed",
-    "attempts": 3,
-    "last_error": "Analyzing output...                                             \n\n   info • Convert 'key' to a super parameter • lib/features/story/presentation/creator_mode/creator_dashboard_screen.dart:15:9 • use_super_parameters\n\n1 issue found. (ran in 1.7s)\n",
+    "status": "pending",
+    "attempts": 0,
+    "last_error": null,
     "provider": "groq"
   }
 ]
