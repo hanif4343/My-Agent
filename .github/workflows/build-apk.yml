@@ -1,16 +1,23 @@
 name: Build APK
 
 # Actions ট্যাব থেকে ম্যানুয়ালি "Run workflow" চাপলেই APK বানাবে।
-# এটা Play Store release-signed না — শুধু নিজের ফোনে টেস্ট ইনস্টলের জন্য
-# (ফোনে "Install from unknown sources" অনুমতি দিতে হবে)।
+# সরাসরি My-Story-from-Agent রিপো checkout করে build করে —
+# এটা Play Store release-signed না, শুধু নিজের ফোনে টেস্ট ইনস্টলের জন্য।
 on:
   workflow_dispatch:
+
+env:
+  OUTPUT_REPO: hanif4343/My-Story-from-Agent
 
 jobs:
   build-apk:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout output repo (${{ env.OUTPUT_REPO }})
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.OUTPUT_REPO }}
+          token: ${{ secrets.OUTPUT_REPO_TOKEN }}
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -19,22 +26,20 @@ jobs:
 
       - name: pubspec.yaml আছে কিনা চেক করা
         run: |
-          if [ ! -f "app/pubspec.yaml" ]; then
-            echo "::error::app/pubspec.yaml পাওয়া যায়নি। আগে orchestrator চালিয়ে Flutter প্রজেক্ট স্ক্যাফোল্ড করাও।"
+          if [ ! -f "pubspec.yaml" ]; then
+            echo "::error::pubspec.yaml পাওয়া যায়নি My-Story-from-Agent রিপোতে। আগে AI Dev Orchestrator workflow চালিয়ে স্ক্যাফোল্ড করাও।"
             exit 1
           fi
 
       - name: Dependencies আনা
-        working-directory: app
         run: flutter pub get
 
       - name: APK build করা (release, debug keystore দিয়ে সাইন করা)
-        working-directory: app
         run: flutter build apk --release
 
       - name: APK আপলোড করা (এখান থেকে ডাউনলোড করা যাবে)
         uses: actions/upload-artifact@v4
         with:
           name: our-story-apk
-          path: app/build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
