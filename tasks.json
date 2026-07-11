@@ -37,7 +37,9 @@
     "title": "HiveSceneRepository তৈরি",
     "instruction": "lib/features/story/data/repositories/hive_scene_repository.dart ফাইলে HiveSceneRepository ক্লাস বানাও যা একটা Hive Box<SceneModel> নিয়ে কাজ করবে (constructor এ Box<SceneModel> box নেবে)। মেথড: addScene, updateScene, deleteScene(id), getAllScenes() (year অনুযায়ী sorted রিটার্ন করবে), getSceneById(id), reorderScenes(List<String> orderedIds), toggleFavorite(id)।",
     "target_file": "lib/features/story/data/repositories/hive_scene_repository.dart",
-    "context_files": ["lib/features/story/data/models/scene_model.dart"],
+    "context_files": [
+      "lib/features/story/data/models/scene_model.dart"
+    ],
     "status": "done",
     "attempts": 1,
     "last_error": null,
@@ -48,7 +50,9 @@
     "title": "main.dart - Hive init ও app entry",
     "instruction": "lib/main.dart লেখো: main() এ WidgetsFlutterBinding.ensureInitialized(), Hive.initFlutter(), Hive.registerAdapter(SceneModelAdapter()), Hive.openBox<SceneModel>('scenes') করবে। MaterialApp চালু করবে dark theme দিয়ে (Material 3), হোম হবে একটা ModeSelectionScreen (এখনো বানানো হয়নি, স্টাব হিসেবে একটা সাধারণ Scaffold লেখো '2টা বাটন: Story Mode / Creator Mode' — পরের টাস্কে এটা replace হবে)।",
     "target_file": "lib/main.dart",
-    "context_files": ["lib/features/story/data/models/scene_model.dart"],
+    "context_files": [
+      "lib/features/story/data/models/scene_model.dart"
+    ],
     "status": "done",
     "attempts": 1,
     "last_error": null,
@@ -99,10 +103,10 @@
     "instruction": "lib/features/story/presentation/mode_selection_screen.dart ফাইলে ModeSelectionScreen বানাও। dark romantic theme অনুযায়ী একটা সুন্দর স্ক্রিন যেখানে দুইটা বাটন থাকবে: \"Story Mode\" (route '/story-mode' এ navigate করবে) এবং \"Creator Mode\" (route '/creator-gate' এ navigate করবে)। App title/logo এর জায়গায় \"Our Story\" লেখা বড় করে দেখাবে।",
     "target_file": "lib/features/story/presentation/mode_selection_screen.dart",
     "context_files": [],
-    "status": "pending",
-    "attempts": 0,
+    "status": "done",
+    "attempts": 2,
     "last_error": null,
-    "provider": null
+    "provider": "groq"
   },
   {
     "id": "task_010",
@@ -110,32 +114,38 @@
     "instruction": "main.dart এ MaterialApp এ named routes যোগ করো: '/' → ModeSelectionScreen, '/story-mode' → StoryModeScreen, '/creator-gate' → PasswordGateScreen, '/creator-dashboard' → CreatorDashboardScreen। প্রয়োজনীয় সব import যোগ করো। আগের placeholder Scaffold স্ট্যাব সরিয়ে ModeSelectionScreen কে home বানাও।",
     "target_file": "lib/main.dart",
     "context_files": [],
-    "status": "pending",
-    "attempts": 0,
+    "status": "done",
+    "attempts": 3,
     "last_error": null,
-    "provider": null
+    "provider": "groq"
   },
   {
     "id": "task_011",
     "title": "Scene Editor স্ক্রিন তৈরি",
     "instruction": "lib/features/story/presentation/creator_mode/scene_editor_screen.dart ফাইলে SceneEditorScreen (StatefulWidget) বানাও — একটা optional SceneModel? existingScene প্যারামিটার নেবে (null হলে নতুন scene, না হলে edit মোড)। ফর্মে থাকবে: title, subtitle, storyText (multiline), year (number), chapter (dropdown, AppEnums এর ChapterId থেকে), theme (dropdown AppTheme থেকে), animationType (dropdown), transitionType (dropdown), durationSeconds (number)। Save বাটনে HiveSceneRepository দিয়ে addScene/updateScene কল হবে, তারপর Navigator.pop(context) হবে।",
     "target_file": "lib/features/story/presentation/creator_mode/scene_editor_screen.dart",
-    "context_files": ["lib/features/story/data/models/scene_model.dart", "lib/features/story/data/repositories/hive_scene_repository.dart", "lib/core/constants/app_enums.dart"],
-    "status": "pending",
-    "attempts": 0,
+    "context_files": [
+      "lib/features/story/data/models/scene_model.dart",
+      "lib/features/story/data/repositories/hive_scene_repository.dart",
+      "lib/core/constants/app_enums.dart"
+    ],
+    "status": "done",
+    "attempts": 3,
     "last_error": null,
-    "provider": null
+    "provider": "cerebras"
   },
   {
     "id": "task_012",
     "title": "Creator dashboard এ Add/Edit বাটন wire করা",
     "instruction": "creator_dashboard_screen.dart এ FloatingActionButton ('+ নতুন Scene') এ SceneEditorScreen এ navigate করার কোড বসাও (existingScene: null)। প্রতিটা scene item এর edit বাটনেও SceneEditorScreen এ navigate করবে (existingScene: সেই scene)। Navigator.pop থেকে ফিরে আসার পর scene list রিফ্রেশ (setState) হবে।",
     "target_file": "lib/features/story/presentation/creator_mode/creator_dashboard_screen.dart",
-    "context_files": ["lib/features/story/presentation/creator_mode/scene_editor_screen.dart"],
-    "status": "pending",
-    "attempts": 0,
+    "context_files": [
+      "lib/features/story/presentation/creator_mode/scene_editor_screen.dart"
+    ],
+    "status": "done",
+    "attempts": 1,
     "last_error": null,
-    "provider": null
+    "provider": "cerebras"
   },
   {
     "id": "task_013",
@@ -143,10 +153,10 @@
     "instruction": "creator_dashboard_screen.dart এ প্রতিটা scene item এর delete বাটনে একটা confirmation dialog (AlertDialog) দেখাবে \"Delete this scene?\" লেখা সহ, \"হ্যাঁ\" চাপলে repository.deleteScene(id) কল হবে এবং list রিফ্রেশ হবে।",
     "target_file": "lib/features/story/presentation/creator_mode/creator_dashboard_screen.dart",
     "context_files": [],
-    "status": "pending",
-    "attempts": 0,
+    "status": "done",
+    "attempts": 1,
     "last_error": null,
-    "provider": null
+    "provider": "groq"
   },
   {
     "id": "task_014",
@@ -154,9 +164,9 @@
     "instruction": "scene_editor_screen.dart এ একটা \"ছবি যোগ করো\" বাটন যোগ করো যা image_picker প্যাকেজ দিয়ে গ্যালারি থেকে ছবি বেছে নেবে এবং photoPaths লিস্টে যোগ করবে। বাছাই করা ছবিগুলো একটা horizontal scrollable thumbnail row এ preview দেখাবে, প্রতিটাতে একটা ছোট \"x\" বাটন থাকবে মুছে ফেলার জন্য।",
     "target_file": "lib/features/story/presentation/creator_mode/scene_editor_screen.dart",
     "context_files": [],
-    "status": "pending",
-    "attempts": 0,
+    "status": "done",
+    "attempts": 1,
     "last_error": null,
-    "provider": null
+    "provider": "cerebras"
   }
 ]
