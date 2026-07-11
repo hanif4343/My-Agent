@@ -45,11 +45,12 @@ jobs:
         run: |
           if [ -f "${{ env.OUTPUT_DIR }}/orchestrator.config.json" ]; then
             LANG=$(python3 -c "import json;print(json.load(open('${{ env.OUTPUT_DIR }}/orchestrator.config.json')).get('language','generic'))")
+            echo "language=$LANG" >> "$GITHUB_OUTPUT"
+            echo "প্রজেক্টের ভাষা শনাক্ত হলো: $LANG"
           else
-            LANG="generic"
+            echo "language=generic" >> "$GITHUB_OUTPUT"
+            echo "::warning::${{ env.OUTPUT_DIR }}/orchestrator.config.json পাওয়া যায়নি! ভাষা 'generic' ধরা হচ্ছে — validate_commands খালি থাকবে, মানে flutter analyze/test/pub get কিছুই চলবে না এবং AI-এর কোড কোনো যাচাই ছাড়াই commit হবে। এটা এড়াতে output রিপোর রুটে orchestrator.config.json বসাও।"
           fi
-          echo "language=$LANG" >> "$GITHUB_OUTPUT"
-          echo "প্রজেক্টের ভাষা শনাক্ত হলো: $LANG"
 
       - name: Setup Flutter
         if: steps.detect.outputs.language == 'flutter'
@@ -101,6 +102,14 @@ jobs:
             --tasks ./tasks.json \
             --rules ./PROJECT_RULES.md \
             --max-tasks 10
+
+      # গুরুত্বপূর্ণ: tasks.json এর status update (pending → done/failed) control রিপোতে
+      # (My-Agent) ফেরত commit+push না করলে পরের রান আবার সব টাস্ক নতুন করে করবে।
+      - name: tasks.json এর status control রিপোতে সেভ করা
+        run: |
+          git add tasks.json
+          git commit -m "Update task status [skip ci]" || echo "কোনো পরিবর্তন নেই"
+          git push
 
       # কোনো টাস্ক max retry শেষেও fail থাকলে সেগুলোর তালিকা বের করা।
       - name: Check for unresolved failed tasks
