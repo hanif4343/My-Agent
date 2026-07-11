@@ -21,7 +21,7 @@ from pathlib import Path
 CONFIG_TEMPLATES = {
     "flutter": {
         "language": "flutter",
-        "validate_commands": ["flutter analyze", "flutter test"],
+        "validate_commands": ["flutter pub get", "flutter analyze", "flutter test"],
     },
     "python": {
         "language": "python",
