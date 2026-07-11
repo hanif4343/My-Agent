@@ -92,8 +92,8 @@
       "lib/features/story/data/models/scene_model.dart",
       "lib/features/story/data/repositories/hive_scene_repository.dart"
     ],
-    "status": "pending",
-    "attempts": 0,
+    "status": "done",
+    "attempts": 2,
     "last_error": null,
     "provider": "groq"
   }
