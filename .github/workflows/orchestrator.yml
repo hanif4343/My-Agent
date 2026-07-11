@@ -1,9 +1,15 @@
 name: AI Dev Orchestrator
 
+# CONTROL রিপো (My-Agent): orchestrator কোড, tasks.json, PROJECT_RULES.md এখানে থাকে
+# OUTPUT রিপো (My-Story-from-Agent): আসল Flutter প্রজেক্ট এখানে জমা হয় ও কমিট হয়
 on:
   workflow_dispatch:
   schedule:
     - cron: "0 * * * *"
+
+env:
+  OUTPUT_REPO: hanif4343/My-Story-from-Agent
+  OUTPUT_DIR: output
 
 jobs:
   run-orchestrator:
@@ -11,8 +17,20 @@ jobs:
     permissions:
       contents: write
     steps:
+      # ধাপ ১: control রিপো (My-Agent) checkout — orchestrator কোড, tasks.json এখানে
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
+
+      # ধাপ ২: output রিপো (My-Story-from-Agent) আলাদা সাবফোল্ডারে checkout —
+      # আসল Flutter প্রজেক্ট এখানে লেখা/কমিট হবে। এর জন্য আলাদা token লাগে
+      # কারণ ডিফল্ট GITHUB_TOKEN শুধু এই (My-Agent) রিপোতেই কাজ করে।
+      - name: Checkout output repo (${{ env.OUTPUT_REPO }})
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.OUTPUT_REPO }}
+          token: ${{ secrets.OUTPUT_REPO_TOKEN }}
+          path: ${{ env.OUTPUT_DIR }}
           fetch-depth: 0
 
       - uses: actions/setup-python@v5
@@ -25,8 +43,8 @@ jobs:
       - name: Detect project language
         id: detect
         run: |
-          if [ -f "app/orchestrator.config.json" ]; then
-            LANG=$(python3 -c "import json;print(json.load(open('app/orchestrator.config.json')).get('language','generic'))")
+          if [ -f "${{ env.OUTPUT_DIR }}/orchestrator.config.json" ]; then
+            LANG=$(python3 -c "import json;print(json.load(open('${{ env.OUTPUT_DIR }}/orchestrator.config.json')).get('language','generic'))")
           else
             LANG="generic"
           fi
@@ -42,9 +60,9 @@ jobs:
       - name: Flutter প্রজেক্ট স্ক্যাফোল্ড করা (প্রথমবার, pubspec.yaml না থাকলে)
         if: steps.detect.outputs.language == 'flutter'
         run: |
-          if [ ! -f "app/pubspec.yaml" ]; then
+          if [ ! -f "${{ env.OUTPUT_DIR }}/pubspec.yaml" ]; then
             echo "pubspec.yaml পাওয়া যায়নি — নতুন Flutter প্রজেক্ট স্ক্যাফোল্ড করা হচ্ছে..."
-            flutter create --org com.hanifsantona --project-name our_story app
+            flutter create --org com.hanifsantona --project-name our_story ${{ env.OUTPUT_DIR }}
             echo "স্ক্যাফোল্ড সম্পন্ন।"
           else
             echo "pubspec.yaml আগে থেকেই আছে, স্কিপ করা হলো।"
@@ -79,13 +97,12 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
           python -m orchestrator.main \
-            --project ./app \
+            --project ./${{ env.OUTPUT_DIR }} \
             --tasks ./tasks.json \
             --rules ./PROJECT_RULES.md \
             --max-tasks 10
 
       # কোনো টাস্ক max retry শেষেও fail থাকলে সেগুলোর তালিকা বের করা।
-      # MAIL_USERNAME/MAIL_PASSWORD/MAIL_TO secret সেট না থাকলে এই ধাপ নিজে থেকে স্কিপ হবে।
       - name: Check for unresolved failed tasks
         id: check_failed
         run: |
