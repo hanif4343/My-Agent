@@ -73,13 +73,16 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          SAMBANOVA_API_KEY: ${{ secrets.SAMBANOVA_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
           python -m orchestrator.main \
             --project ./app \
             --tasks ./tasks.json \
             --rules ./PROJECT_RULES.md \
-            --max-tasks 5
+            --max-tasks 10
 
       # কোনো টাস্ক max retry শেষেও fail থাকলে সেগুলোর তালিকা বের করা।
       # MAIL_USERNAME/MAIL_PASSWORD/MAIL_TO secret সেট না থাকলে এই ধাপ নিজে থেকে স্কিপ হবে।
