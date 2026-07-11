@@ -1,20 +1,10 @@
 name: Add Orchestrator Task
 
 # Actions ট্যাব থেকে "Run workflow" চাপলে এই ইনপুট ফর্মটা দেখাবে —
-# টাইপ করে সাবমিট দিলেই tasks.json এবং orchestrator.config.json আপডেট হয়ে যাবে।
+# টাইপ করে সাবমিট দিলেই tasks.json এ নতুন টাস্ক যোগ হয়ে যাবে (এই My-Agent রিপোতেই)।
 on:
   workflow_dispatch:
     inputs:
-      project_type:
-        description: "প্রজেক্টের ধরন"
-        required: true
-        type: choice
-        options:
-          - flutter
-          - python
-          - kotlin
-          - node
-          - generic
       title:
         description: "টাস্কের সংক্ষিপ্ত টাইটেল"
         required: true
@@ -24,7 +14,7 @@ on:
         required: true
         type: string
       target_file:
-        description: "কোন ফাইলে লেখা হবে (app/ ফোল্ডারের ভেতরের relative path, যেমন calculator.py বা lib/models/scene.dart)"
+        description: "কোন ফাইলে লেখা হবে (output প্রজেক্টের ভেতরের relative path, যেমন lib/models/scene.dart)"
         required: true
         type: string
 
@@ -45,18 +35,16 @@ jobs:
           git config --global user.name "ai-orchestrator-bot"
           git config --global user.email "bot@users.noreply.github.com"
 
-      - name: টাস্ক ও config যোগ করা
+      - name: টাস্ক যোগ করা
         run: |
           python orchestrator/manage_tasks.py \
-            --project-type "${{ inputs.project_type }}" \
             --title "${{ inputs.title }}" \
             --instruction "${{ inputs.instruction }}" \
             --target-file "${{ inputs.target_file }}" \
-            --project-dir "app" \
             --tasks-file "tasks.json"
 
       - name: Commit ও push
         run: |
-          git add tasks.json app/orchestrator.config.json
-          git commit -m "Add task: ${{ inputs.title }} (${{ inputs.project_type }})" || echo "কোনো পরিবর্তন নেই"
+          git add tasks.json
+          git commit -m "Add task: ${{ inputs.title }}" || echo "কোনো পরিবর্তন নেই"
           git push
