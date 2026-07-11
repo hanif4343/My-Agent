@@ -1,6 +1,7 @@
 {
   "language": "flutter",
   "validate_commands": [
+    "flutter pub get",
     "flutter analyze",
     "flutter test"
   ]
