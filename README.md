@@ -80,6 +80,25 @@ python -m orchestrator.main \
 
 প্রতিটা টাস্ক সম্পন্ন/ব্যর্থ হওয়ার পর `tasks.json`-এ `"provider"` ফিল্ডে কোন AI (gemini/groq/cerebras/openrouter) সেটা করেছে তা সেভ হয়ে যায় — মনিটরিং app এখান থেকেই দেখাতে পারবে।
 
+## Provider মডেল "404" বা "rate-limited" দিচ্ছে?
+
+ফ্রি LLM provider-রা (Groq, Cerebras) মাঝে মাঝেই মডেল বদলে/সরিয়ে দেয়, কোনো নোটিশ ছাড়াই। লগে `404 Not Found` বা মডেলের নাম-সম্পর্কিত error দেখলে:
+
+1. `orchestrator/config.py` ফাইলে `PROVIDERS` লিস্টে গিয়ে সেই provider-এর `"model"` ভ্যালু বদলাও
+2. বর্তমান মডেল নাম জানতে provider-এর official docs দেখো (Groq: console.groq.com/docs/models, Cerebras: cloud.cerebras.ai)
+3. একটা মডেল কাজ না করলে সেটা active_providers() লিস্ট থেকে সরিয়ে দিলে বাকিগুলো দিয়েই চলবে
+
+## APK বানানো ও ফোনে ইনস্টল করা
+
+যেকোনো সময় progress দেখতে চাইলে:
+
+1. `Actions` ট্যাব → `Build APK` workflow বেছে নাও → `Run workflow`
+2. ২-৩ মিনিট অপেক্ষা করো (build শেষ হলে সবুজ ✔ দেখাবে)
+3. রান-এর পেজে নিচের দিকে **Artifacts** সেকশনে `our-story-apk` নামে একটা ZIP পাবে — ট্যাপ করে ডাউনলোড করো
+4. ফোনে ZIP এক্সট্রাক্ট করে `.apk` ফাইলটা খুলে ইনস্টল করো ("Install from unknown sources" অনুমতি চাইতে পারে, allow করো)
+
+এটা Play Store-এর মতো official-signed APK না (debug keystore দিয়ে সাইন করা) — শুধু নিজের ফোনে টেস্ট করার জন্য, এতে কোনো সমস্যা নেই।
+
 ## GitHub Actions দিয়ে অটোমেট করা
 
 1. এই পুরো repo GitHub-এ push করো
@@ -88,12 +107,17 @@ python -m orchestrator.main \
 
 ## Free tier কনফিগারেশন (২০২৬ অনুযায়ী, নিয়মিত বদলায় — নিজে যাচাই করে নাও)
 
-| Provider | মোটামুটি লিমিট |
-|---|---|
-| Gemini (AI Studio) | ~১৫০০ req/day, ক্রেডিট কার্ড লাগে না, স্থায়ী ফ্রি টিয়ার |
-| Groq | ৩০ req/min, ৬,০০০ token/min, ~১৪,৪০০ req/day |
-| Cerebras | ~১M token/day, তবে মডেল লিস্ট মাঝে মাঝে বদলে যায় |
-| OpenRouter (:free মডেল) | ~২০ req/min, ~২০০ req/day |
+| Provider | মোটামুটি লিমিট | সাইনআপ | Secret নাম |
+|---|---|---|---|
+| Gemini (AI Studio) | ~১৫০০ req/day, ক্রেডিট কার্ড লাগে না | aistudio.google.com/apikey | `GEMINI_API_KEY` |
+| Groq | ~১,০০০ req/day (২০২৬-এ কমানো হয়েছে) | console.groq.com | `GROQ_API_KEY` |
+| Cerebras | ~১M token/day, মডেল লিস্ট মাঝে মাঝে বদলায় | cloud.cerebras.ai | `CEREBRAS_API_KEY` |
+| Mistral (La Plateforme) | ~১B token/month (generous) | console.mistral.ai | `MISTRAL_API_KEY` |
+| NVIDIA NIM | ৪০ req/min, দৈনিক cap নেই | build.nvidia.com | `NVIDIA_API_KEY` |
+| SambaNova | মাত্র ~২০ req/day (extra fallback হিসেবে ভালো) | cloud.sambanova.ai | `SAMBANOVA_API_KEY` |
+| OpenRouter (:free মডেল) | ~২০ req/min, ~২০০ req/day | openrouter.ai | `OPENROUTER_API_KEY` |
+
+যেকোনো একটা key দিলেই চলবে, বেশি key দিলে বেশি resilience — একটা rate-limit খেলে পরেরটা নিজে থেকে try হবে। নতুন provider যোগ করতে চাইলে `orchestrator/config.py`-তে `PROVIDERS` লিস্টে একটা এন্ট্রি বাড়াও, আর GitHub Secrets + `orchestrator.yml`-এর `env:` ব্লকে সেই key যোগ করো।
 
 ## কেন এভাবে ডিজাইন করা হয়েছে (এবং কী ইচ্ছাকৃতভাবে বাদ দেওয়া হয়েছে)
 
