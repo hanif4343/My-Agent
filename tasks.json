@@ -5,10 +5,10 @@
     "instruction": "pubspec.yaml ফাইলে dependencies সেকশনে এই প্যাকেজগুলো যোগ করো (যুক্তিসঙ্গত stable ভার্সন কনস্ট্রেইন্ট সহ): hive, hive_flutter, path_provider, video_player, audioplayers, record, permission_handler, image_picker, file_picker, provider, uuid, google_fonts, lottie। flutter, cupertino_icons ইত্যাদি যা আগে থেকে আছে সেগুলো অপরিবর্তিত রাখো। flutter/assets সেকশনে assets/animations/ এবং assets/images/ পাথ যোগ করো।",
     "target_file": "pubspec.yaml",
     "context_files": [],
-    "status": "done",
-    "attempts": 1,
+    "status": "pending",
+    "attempts": 0,
     "last_error": null,
-    "provider": "groq"
+    "provider": null
   },
   {
     "id": "task_002",
@@ -16,10 +16,10 @@
     "instruction": "lib/core/constants/app_enums.dart ফাইলে ৪টা enum বানাও: AppTheme (darkRomantic, goldenWedding, moonNight, roseGarden, pinkLove, sunset, galaxy, hospital, nursery, home), ChapterId (chapter1 থেকে chapter17, প্রতিটার সাথে একটা human-readable বাংলা title ম্যাপ করা getter), AnimationType (heartRain, roseRain, butterfly, sparkle, goldenDust, fireworks, cloud, rain, moon, stars, letter, envelope, ring, book, pageTurn, typewriter, lensFlare, lightRays, confetti, magicGlow), TransitionType (fade, zoom, slide, rotate, flip, blur, film, inkReveal, pageCurl, cameraFlash, glass, ripple)।",
     "target_file": "lib/core/constants/app_enums.dart",
     "context_files": [],
-    "status": "done",
-    "attempts": 1,
+    "status": "pending",
+    "attempts": 0,
     "last_error": null,
-    "provider": "groq"
+    "provider": null
   },
   {
     "id": "task_003",
@@ -27,10 +27,10 @@
     "instruction": "lib/features/story/data/models/scene_model.dart ফাইলে SceneModel ক্লাস বানাও extends HiveObject। ফিল্ড: id (String), year (int), chapter (String), date (String), title (String), subtitle (String), storyText (String), photoPaths (List<String>), videoPaths (List<String>), voiceNotePaths (List<String>), musicPath (String?), theme (String), animationType (String), transitionType (String), durationSeconds (int), isFavorite (bool), tags (List<String>)। কনস্ট্রাক্টর সব ফিল্ড required (musicPath ছাড়া) নেবে। এর নিচেই একটা SceneModelAdapter ক্লাস লেখো যা TypeAdapter<SceneModel> extend করে, typeId = 0, read()/write() মেথড হাতে implement করবে (build_runner ব্যবহার করবে না, pure manual code)।",
     "target_file": "lib/features/story/data/models/scene_model.dart",
     "context_files": [],
-    "status": "done",
-    "attempts": 1,
+    "status": "pending",
+    "attempts": 0,
     "last_error": null,
-    "provider": "groq"
+    "provider": null
   },
   {
     "id": "task_004",
@@ -40,10 +40,10 @@
     "context_files": [
       "lib/features/story/data/models/scene_model.dart"
     ],
-    "status": "done",
-    "attempts": 1,
+    "status": "pending",
+    "attempts": 0,
     "last_error": null,
-    "provider": "groq"
+    "provider": null
   },
   {
     "id": "task_005",
@@ -53,10 +53,10 @@
     "context_files": [
       "lib/features/story/data/models/scene_model.dart"
     ],
-    "status": "done",
-    "attempts": 1,
+    "status": "pending",
+    "attempts": 0,
     "last_error": null,
-    "provider": "groq"
+    "provider": null
   },
   {
     "id": "task_006",
@@ -64,10 +64,10 @@
     "instruction": "lib/features/story/presentation/creator_mode/password_gate_screen.dart ফাইলে PasswordGateScreen (StatefulWidget) বানাও। একটা password input field, submit বাটন। crypto প্যাকেজ ছাড়াই dart:convert এর utf8 আর dart:core দিয়ে সহজ hash compare করো (SHA256 এর জন্য শুধু dart এর মধ্যে থাকা ফাংশন ব্যবহার করো, নতুন প্যাকেজ যোগ করবে না — না পারলে সরল স্ট্রিং তুলনা করো placeholder হিসেবে, TODO কমেন্ট রেখে)। সঠিক হলে CreatorDashboardScreen এ navigate করবে (route named '/creator-dashboard'), ভুল হলে snackbar এ 'ভুল পাসওয়ার্ড' দেখাবে।",
     "target_file": "lib/features/story/presentation/creator_mode/password_gate_screen.dart",
     "context_files": [],
-    "status": "done",
-    "attempts": 1,
+    "status": "pending",
+    "attempts": 0,
     "last_error": null,
-    "provider": "groq"
+    "provider": null
   },
   {
     "id": "task_007",
@@ -78,10 +78,10 @@
       "lib/features/story/data/models/scene_model.dart",
       "lib/features/story/data/repositories/hive_scene_repository.dart"
     ],
-    "status": "done",
-    "attempts": 1,
+    "status": "pending",
+    "attempts": 0,
     "last_error": null,
-    "provider": "groq"
+    "provider": null
   },
   {
     "id": "task_008",
@@ -92,193 +92,9 @@
       "lib/features/story/data/models/scene_model.dart",
       "lib/features/story/data/repositories/hive_scene_repository.dart"
     ],
-    "status": "done",
-    "attempts": 1,
+    "status": "pending",
+    "attempts": 0,
     "last_error": null,
-    "provider": "groq"
-  },
-  {
-    "id": "task_009",
-    "title": "ModeSelectionScreen তৈরি",
-    "instruction": "lib/features/story/presentation/mode_selection_screen.dart ফাইলে ModeSelectionScreen বানাও। dark romantic theme অনুযায়ী একটা সুন্দর স্ক্রিন যেখানে দুইটা বাটন থাকবে: \"Story Mode\" (route '/story-mode' এ navigate করবে) এবং \"Creator Mode\" (route '/creator-gate' এ navigate করবে)। App title/logo এর জায়গায় \"Our Story\" লেখা বড় করে দেখাবে।",
-    "target_file": "lib/features/story/presentation/mode_selection_screen.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "groq"
-  },
-  {
-    "id": "task_010",
-    "title": "main.dart এ routes ও ModeSelectionScreen যুক্ত করা",
-    "instruction": "main.dart এ MaterialApp এ named routes যোগ করো: '/' → ModeSelectionScreen, '/story-mode' → StoryModeScreen, '/creator-gate' → PasswordGateScreen, '/creator-dashboard' → CreatorDashboardScreen। প্রয়োজনীয় সব import যোগ করো। আগের placeholder Scaffold স্ট্যাব সরিয়ে ModeSelectionScreen কে home বানাও।",
-    "target_file": "lib/main.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "groq"
-  },
-  {
-    "id": "task_011",
-    "title": "Scene Editor স্ক্রিন তৈরি",
-    "instruction": "lib/features/story/presentation/creator_mode/scene_editor_screen.dart ফাইলে SceneEditorScreen (StatefulWidget) বানাও — একটা optional SceneModel? existingScene প্যারামিটার নেবে (null হলে নতুন scene, না হলে edit মোড)। ফর্মে থাকবে: title, subtitle, storyText (multiline), year (number), chapter (dropdown, AppEnums এর ChapterId থেকে), theme (dropdown AppTheme থেকে), animationType (dropdown), transitionType (dropdown), durationSeconds (number)। Save বাটনে HiveSceneRepository দিয়ে addScene/updateScene কল হবে, তারপর Navigator.pop(context) হবে।",
-    "target_file": "lib/features/story/presentation/creator_mode/scene_editor_screen.dart",
-    "context_files": [
-      "lib/features/story/data/models/scene_model.dart",
-      "lib/features/story/data/repositories/hive_scene_repository.dart",
-      "lib/core/constants/app_enums.dart"
-    ],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "groq"
-  },
-  {
-    "id": "task_012",
-    "title": "Creator dashboard এ Add/Edit বাটন wire করা",
-    "instruction": "creator_dashboard_screen.dart এ FloatingActionButton ('+ নতুন Scene') এ SceneEditorScreen এ navigate করার কোড বসাও (existingScene: null)। প্রতিটা scene item এর edit বাটনেও SceneEditorScreen এ navigate করবে (existingScene: সেই scene)। Navigator.pop থেকে ফিরে আসার পর scene list রিফ্রেশ (setState) হবে।",
-    "target_file": "lib/features/story/presentation/creator_mode/creator_dashboard_screen.dart",
-    "context_files": [
-      "lib/features/story/presentation/creator_mode/scene_editor_screen.dart"
-    ],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "groq"
-  },
-  {
-    "id": "task_013",
-    "title": "Creator dashboard এ Delete বাটন wire করা",
-    "instruction": "creator_dashboard_screen.dart এ প্রতিটা scene item এর delete বাটনে একটা confirmation dialog (AlertDialog) দেখাবে \"Delete this scene?\" লেখা সহ, \"হ্যাঁ\" চাপলে repository.deleteScene(id) কল হবে এবং list রিফ্রেশ হবে।",
-    "target_file": "lib/features/story/presentation/creator_mode/creator_dashboard_screen.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "groq"
-  },
-  {
-    "id": "task_014",
-    "title": "Scene Editor এ Image Picker যোগ করা",
-    "instruction": "scene_editor_screen.dart এ একটা \"ছবি যোগ করো\" বাটন যোগ করো যা image_picker প্যাকেজ দিয়ে গ্যালারি থেকে ছবি বেছে নেবে এবং photoPaths লিস্টে যোগ করবে। বাছাই করা ছবিগুলো একটা horizontal scrollable thumbnail row এ preview দেখাবে, প্রতিটাতে একটা ছোট \"x\" বাটন থাকবে মুছে ফেলার জন্য।",
-    "target_file": "lib/features/story/presentation/creator_mode/scene_editor_screen.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "groq"
-  },
-  {
-    "id": "task_015",
-    "title": "crypto প্যাকেজ যোগ করা",
-    "instruction": "pubspec.yaml এর dependencies এ crypto প্যাকেজ যোগ করো (stable ভার্সন)। বাকি কিছু বদলাবে না।",
-    "target_file": "pubspec.yaml",
-    "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "groq"
-  },
-  {
-    "id": "task_016",
-    "title": "Password Setup ও proper hashing",
-    "instruction": "lib/features/story/presentation/creator_mode/password_setup_screen.dart ফাইলে PasswordSetupScreen বানাও: একটা Hive box 'settings' খুলবে (main.dart এ আগে থেকে Hive.openBox('settings') করা না থাকলে সেটাও উল্লেখ করো কমেন্টে)। যদি 'settings' বক্সে 'password_hash' key না থাকে, তাহলে এই স্ক্রিন দেখাবে দুইটা ফিল্ড (password, confirm password), মিললে crypto প্যাকেজের sha256 দিয়ে hash করে 'settings' বক্সে সেভ করবে, তারপর CreatorDashboardScreen এ navigate করবে। এরপর password_gate_screen.dart ফাইলটাও আপডেট করো: এখন থেকে ইনপুট করা পাসওয়ার্ড sha256 করে 'settings' বক্সের 'password_hash' এর সাথে তুলনা করবে (আগের placeholder TODO সরিয়ে)। যদি 'settings' বক্সে password_hash না থাকে, PasswordGateScreen প্রথমেই PasswordSetupScreen এ redirect করবে।",
-    "target_file": "lib/features/story/presentation/creator_mode/password_setup_screen.dart",
-    "context_files": [
-      "lib/features/story/presentation/creator_mode/password_gate_screen.dart"
-    ],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "groq"
-  },
-  {
-    "id": "task_017",
-    "title": "Story Mode এ ছবি দেখানো",
-    "instruction": "story_mode_screen.dart এ প্রতিটা scene এর photoPaths খালি না থাকলে, storyText এর উপরে বা নিচে একটা horizontal PageView/carousel এ ছবিগুলো Image.file() দিয়ে দেখাও (fixed height, rounded corners, cover fit)। ফাইল missing/error হলে একটা placeholder icon দেখাবে, crash করবে না (errorBuilder ব্যবহার করো)।",
-    "target_file": "lib/features/story/presentation/story_mode/story_mode_screen.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "groq"
-  },
-  {
-    "id": "task_018",
-    "title": "Story Mode এ ভিডিও চালানো",
-    "instruction": "story_mode_screen.dart এ video_player প্যাকেজ ব্যবহার করে, scene এর videoPaths খালি না থাকলে প্রথম ভিডিওটা দেখাও (VideoPlayerController.file দিয়ে init, একটা play/pause icon overlay বাটন, aspect ratio ঠিক রেখে)। controller গুলো dispose() ঠিকভাবে করবে scene পরিবর্তনের সময় (memory leak এড়াতে)।",
-    "target_file": "lib/features/story/presentation/story_mode/story_mode_screen.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "groq"
-  },
-  {
-    "id": "task_019",
-    "title": "Story Mode এ ব্যাকগ্রাউন্ড মিউজিক",
-    "instruction": "story_mode_screen.dart এ audioplayers প্যাকেজ ব্যবহার করে, PageView এর onPageChanged এ বর্তমান scene এর musicPath থাকলে সেটা loop mode এ play করবে, আগের scene এর music থামিয়ে দেবে। উপরের ডান কোণায় একটা mute/unmute icon button থাকবে যা toggle করলে volume 0/1 হবে। dispose এ player বন্ধ হবে।",
-    "target_file": "lib/features/story/presentation/story_mode/story_mode_screen.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 2,
-    "last_error": null,
-    "provider": "cerebras"
-  },
-  {
-    "id": "task_020",
-    "title": "Story Mode এ ভয়েস নোট প্লে বাটন",
-    "instruction": "story_mode_screen.dart এ scene এর voiceNotePaths খালি না থাকলে একটা ছোট \"🎤 Play voice note\" বাটন দেখাও যেটা চাপলে audioplayers দিয়ে প্রথম voice note টা play/pause হবে (icon বদলাবে play হচ্ছে কিনা অনুযায়ী)।",
-    "target_file": "lib/features/story/presentation/story_mode/story_mode_screen.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "cerebras"
-  },
-  {
-    "id": "task_021",
-    "title": "Creator dashboard এ Scene reorder (drag & drop)",
-    "instruction": "creator_dashboard_screen.dart এ ListView কে ReorderableListView এ বদলাও। onReorder callback এ নতুন অর্ডার অনুযায়ী repository.reorderScenes(orderedIds) কল করবে, তারপর setState দিয়ে list রিফ্রেশ হবে। প্রতিটা item এ একটা drag handle icon (Icons.drag_handle) থাকবে ডান পাশে।",
-    "target_file": "lib/features/story/presentation/creator_mode/creator_dashboard_screen.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "cerebras"
-  },
-  {
-    "id": "task_022",
-    "title": "Scene Editor এ ভয়েস রেকর্ডিং",
-    "instruction": "scene_editor_screen.dart এ record প্যাকেজ ব্যবহার করে একটা রেকর্ডিং সেকশন যোগ করো: একটা mic icon বাটন যেটা tap করলে রেকর্ড শুরু হবে (icon লাল হয়ে যাবে, আবার tap করলে থামবে), path_provider দিয়ে app এর documents directory তে ফাইল সেভ হবে, সেভ হওয়া পাথ voiceNotePaths লিস্টে যোগ হবে। নিচে রেকর্ড করা voice note গুলোর একটা লিস্ট দেখাবে, প্রতিটার পাশে play বাটন (audioplayers দিয়ে preview) আর delete বাটন।",
-    "target_file": "lib/features/story/presentation/creator_mode/scene_editor_screen.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 3,
-    "last_error": null,
-    "provider": "cerebras"
-  },
-  {
-    "id": "task_023",
-    "title": "Scene Editor এ গান (music) পিকার",
-    "instruction": "scene_editor_screen.dart এ \"গান বেছে নাও\" বাটন যোগ করো যা file_picker দিয়ে ডিভাইস থেকে একটা অডিও ফাইল বেছে নেবে এবং musicPath এ সেট করবে। বাছাই করা ফাইলের নাম দেখাবে একটা ছোট চিপ/কার্ডে, পাশে একটা \"x\" বাটন থাকবে musicPath খালি করার জন্য।",
-    "target_file": "lib/features/story/presentation/creator_mode/scene_editor_screen.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "cerebras"
-  },
-  {
-    "id": "task_024",
-    "title": "Scene Editor এ ভিডিও পিকার",
-    "instruction": "scene_editor_screen.dart এ \"ভিডিও যোগ করো\" বাটন যোগ করো যা image_picker এর pickVideo() মেথড দিয়ে গ্যালারি থেকে ভিডিও বেছে নেবে এবং videoPaths লিস্টে যোগ করবে। বাছাই করা ভিডিওগুলোর ফাইলনামের একটা লিস্ট দেখাবে, প্রতিটার পাশে একটা \"x\" বাটন মুছে ফেলার জন্য।",
-    "target_file": "lib/features/story/presentation/creator_mode/scene_editor_screen.dart",
-    "context_files": [],
-    "status": "done",
-    "attempts": 1,
-    "last_error": null,
-    "provider": "cerebras"
+    "provider": null
   }
 ]
