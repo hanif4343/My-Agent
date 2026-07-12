@@ -1,0 +1,88 @@
+name: Build Health Check
+
+# per-task validate (flutter analyze/test) Gradle/Kotlin toolchain সমস্যা ধরতে পারে না —
+# শুধু আসল build করলেই বোঝা যায়। তাই এটা আলাদা, কম ঘন ঘন চলা workflow।
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"   # দিনে একবার
+
+env:
+  OUTPUT_REPO: hanif4343/My-Story-from-Agent
+  OUTPUT_DIR: output
+
+jobs:
+  build-health-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout output repo (${{ env.OUTPUT_REPO }})
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.OUTPUT_REPO }}
+          token: ${{ secrets.OUTPUT_REPO_TOKEN }}
+          path: ${{ env.OUTPUT_DIR }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install orchestrator dependencies
+        run: pip install -r requirements.txt
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0"
+
+      - name: Configure git identity (output রিপোর জন্য)
+        run: |
+          git config --global user.name "ai-orchestrator-bot"
+          git config --global user.email "bot@users.noreply.github.com"
+
+      - name: Build Health Check চালানো (debug build, AI auto-fix সহ)
+        id: buildcheck
+        continue-on-error: true
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          SAMBANOVA_API_KEY: ${{ secrets.SAMBANOVA_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          python -m orchestrator.build_check --project ./${{ env.OUTPUT_DIR }} --mode debug
+
+      # AI যদি কোনো infra ফাইল ঠিক করে থাকে (build সফল হোক বা শেষমেশ fail হোক),
+      # সেই পরিবর্তন output রিপোতে কমিট করে রাখা — যাতে পরের চেষ্টায় আবার শুরু থেকে না লাগে।
+      - name: Output রিপোতে fix (যদি হয়ে থাকে) কমিট করা
+        working-directory: ${{ env.OUTPUT_DIR }}
+        run: |
+          git add -A
+          git commit -m "Build Health Check: AI auto-fix (infra file)" || echo "কোনো পরিবর্তন নেই"
+          git push || echo "push করার কিছু নেই"
+
+      - name: Send email alert (build এখনো ব্যর্থ হলে)
+        if: steps.buildcheck.outcome == 'failure'
+        uses: dawidd6/action-send-mail@v3
+        continue-on-error: true
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "🔴 Build Health Check ব্যর্থ — ম্যানুয়াল চেক দরকার (${{ env.OUTPUT_REPO }})"
+          to: ${{ secrets.MAIL_TO }}
+          from: AI Dev Orchestrator
+          body: |
+            Build Health Check AI দিয়ে ফিক্স করার চেষ্টা করেও ব্যর্থ হয়েছে।
+            GitHub Actions-এ গিয়ে run-এর লগ দেখো (Build Health Check workflow)।
+
+      - name: শেষে workflow কে সঠিক status এ ফেরত পাঠানো
+        if: steps.buildcheck.outcome == 'failure'
+        run: exit 1
