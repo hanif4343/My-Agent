@@ -99,6 +99,17 @@ python -m orchestrator.main \
 2. বর্তমান মডেল নাম জানতে provider-এর official docs দেখো
 3. একটা মডেল কাজ না করলে সেটা active_providers() লিস্ট থেকে সরিয়ে দিলে বাকিগুলো দিয়েই চলবে
 
+## Build Health Check (স্বয়ংক্রিয় build ফিক্স চেষ্টা)
+
+per-task validate (flutter analyze/test) Gradle/Kotlin toolchain সমস্যা ধরতে পারে না — শুধু আসল `flutter build apk` করলেই বোঝা যায়। তাই আলাদা একটা workflow (`Build Health Check`) দিনে একবার (ও ম্যানুয়ালি) `flutter build apk --debug` চালায়:
+
+1. Build fail করলে error + `pubspec.yaml`/`build.gradle`/`settings.gradle` AI-কে দেখানো হয়
+2. AI কোন ফাইল ঠিক করা দরকার বলে দেয়, নতুন কনটেন্ট দেয়
+3. সেটা লিখে আবার build করা হয় (max ২ বার চেষ্টা)
+4. এরপরও fail করলে email alert যাবে (`MAIL_USERNAME`/`MAIL_PASSWORD`/`MAIL_TO` secret লাগবে, আগের মতোই)
+
+Debug build ব্যবহার করা হয়েছে (release না) যাতে Android keystore secret ছাড়াই এই চেক চলতে পারে — keystore শুধু `Build Release APK` workflow-এ লাগে।
+
 ## APK বানানো ও ফোনে ইনস্টল করা
 
 যেকোনো সময় progress দেখতে চাইলে:
